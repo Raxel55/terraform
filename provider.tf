@@ -14,3 +14,13 @@ provider "aws" {
     role_arn     = "arn:aws:iam::814517281194:role/terraform-sa"
   }
 }
+
+terraform {
+  backend "s3" {
+    bucket = "kandasite-tf-state"
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+    shared_credentials_file = "~/.aws/credentials"
+    role_arn     = "arn:aws:iam::814517281194:role/terraform-sa"
+  }
+}
