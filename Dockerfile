@@ -1,7 +1,7 @@
-FROM php:7.4
+FROM php:7.4 AS THEME_BUILDER
 
 WORKDIR /app
-COPY ./[^D]* /app/
+COPY ./ /app/
 
 RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - \
  && apt-get update \
@@ -20,15 +20,29 @@ RUN composer update \
 
 #RUN vendor/bin/wp migrate up --interactive=false
 
-RUN cd ./themes/pinboard/ \
+RUN cd wp-content/themes/pinboard/ \
  && touch .env \
  && npm ci \
  && gulp build --max-old-space-size=512
+
+FROM wordpress:5.6.2-php7.4
+
+COPY --from=THEME_BUILDER /app /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html
+
+USER www-data
+
+ENV WORDPRESS_DB_HOST "${WORDPRESS_DB_HOST}"
+ENV WORDPRESS_DB_USER "${WORDPRESS_DB_USER}"
+ENV WORDPRESS_DB_PASSWORD "${WORDPRESS_DB_PASSWORD}"
+ENV WORDPRESS_DB_NAME "${WORDPRESS_DB_NAME}"
 
 #RUN ls -la
 #RUN npm install gulp
 #RUN gulp build
 
-ENV WP_HOME 0.0.0.0
+# ENV WP_HOME 0.0.0.0
 
-ENTRYPOINT cd ./themes/pinboard/ && gulp
+# ENTRYPOINT cd ./themes/pinboard/ && gulp
+
