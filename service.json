@@ -1,27 +1,31 @@
 [
   {
     "name": "kanda",
-    "image": "814517281194.dkr.ecr.us-east-1.amazonaws.com/kanda-test",
+    "image": "814517281194.dkr.ecr.us-east-1.amazonaws.com/kanda",
     "cpu": 128,
     "memory": 1024,
     "essential": true,
     "environment": [
-            {"name": "DB_NAME", "value": "${local.db_name}"},
-            {"name": "DB_USER", "value": "${local.db_user}"},
-            {"name": "DB_PASSWORD", "value": "${local.db_password}"},
-            {"name": "DB_HOST", "value": "${aws_db_instance.kanda.address}"},
-            {"name": "DB_CHARSET", "value": "${aws_db_instance.kanda.character_set_name}"},
-            {"name": "WP_ENV", "value": "staging"},
-            {"name": "WP_HOME", "value": "${aws_lb.kanda.dns_name}"},
-            {"name": "WP_SITEURL", "value": "${aws_lb.kanda.dns_name}/wp"}
+            {"name": "WORDPRESS_DB_NAME", "value": "${local.db_name}"},
+            {"name": "WORDPRESS_DB_USER", "value": "${local.db_user}"},
+            {"name": "WORDPRESS_DB_PASSWORD", "value": "${local.db_password}"},
+            {"name": "WORDPRESS_DB_HOST", "value": "${aws_db_instance.kanda.address}"}
         ],
     "portMappings": [
       {
-        "containerPort": 3000
+        "containerPort": 80
       },
       {
-        "containerPort": 3001
+        "containerPort": 8080
       }
-    ]
+    ],
+    "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "kanda",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "kanda"
+                }
+            }
   }
 ]

@@ -1,6 +1,6 @@
 resource "aws_lb_target_group" "kanda-1" {
   name     = "kanda-1"
-  port     = "3000"
+  port     = "80"
   protocol = "HTTP"
   vpc_id   = aws_vpc.kanda.id
   target_type = "ip"
@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "kanda-1" {
 
 resource "aws_lb_target_group" "kanda-2" {
   name     = "kanda-2"
-  port     = "3001"
+  port     = "8080"
   protocol = "HTTP"
   vpc_id   = aws_vpc.kanda.id
   target_type = "ip"
@@ -40,6 +40,7 @@ resource "aws_lb_listener" "kanda-1" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kanda-1.arn
   }
+  # certificate_arn = aws_acm_certificate.kanda.arn
 }
 
 resource "aws_lb_listener" "kanda-2" {
@@ -51,4 +52,5 @@ resource "aws_lb_listener" "kanda-2" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kanda-2.arn
   }
+  # certificate_arn = aws_acm_certificate.kanda.arn
 }

@@ -4,6 +4,7 @@ resource "aws_db_instance" "kanda" {
   engine               = "mysql"
   engine_version       = "5.7"
   instance_class       = "db.t2.micro"
+  identifier           = "kanda"
   name                 = local.db_name
   username             = local.db_user
   password             = local.db_password

@@ -36,13 +36,13 @@ resource "aws_ecs_service" "kanda" {
   load_balancer {
     target_group_arn = aws_lb_target_group.kanda-1.arn
     container_name   = "kanda"
-    container_port   = 3000
+    container_port   = 80
   }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.kanda-2.arn
     container_name   = "kanda"
-    container_port   = 3001
+    container_port   = 8080
   }
 
   tags = local.common_tags
