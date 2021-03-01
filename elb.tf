@@ -5,20 +5,25 @@ resource "aws_lb_target_group" "kanda-1" {
   vpc_id   = aws_vpc.kanda.id
   target_type = "ip"
 
-  depends_on = [aws_lb.kanda]
-  tags = local.common_tags
-}
-
-resource "aws_lb_target_group" "kanda-2" {
-  name     = "kanda-2"
-  port     = "8080"
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.kanda.id
-  target_type = "ip"
+  health_check {
+    enabled = true
+    path = "/wp-admin/install.php"
+  }
 
   depends_on = [aws_lb.kanda]
   tags = local.common_tags
 }
+
+#resource "aws_lb_target_group" "kanda-2" {
+#  name     = "kanda-2"
+#  port     = "443"
+#  protocol = "HTTPS"
+#  vpc_id   = aws_vpc.kanda.id
+#  target_type = "ip"
+#
+#  depends_on = [aws_lb.kanda]
+#  tags = local.common_tags
+#}
 
 resource "aws_lb" "kanda" {
   name               = "kanda"
@@ -43,14 +48,14 @@ resource "aws_lb_listener" "kanda-1" {
   # certificate_arn = aws_acm_certificate.kanda.arn
 }
 
-resource "aws_lb_listener" "kanda-2" {
-  load_balancer_arn = aws_lb.kanda.arn
-  port              = "8080"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.kanda-2.arn
-  }
-  # certificate_arn = aws_acm_certificate.kanda.arn
-}
+#resource "aws_lb_listener" "kanda-2" {
+#  load_balancer_arn = aws_lb.kanda.arn
+#  port              = "443"
+#  protocol          = "HTTPS"
+#
+#  default_action {
+#    type             = "forward"
+#    target_group_arn = aws_lb_target_group.kanda-2.arn
+#  }
+#  # certificate_arn = aws_acm_certificate.kanda.arn
+#}

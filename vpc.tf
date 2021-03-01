@@ -1,6 +1,8 @@
 resource "aws_vpc" "kanda" {
   cidr_block       = "10.2.0.0/26"
   instance_tenancy = "default"
+  enable_dns_support = true
+  enable_dns_hostnames = true
 
   tags = local.common_tags
 }
@@ -13,6 +15,26 @@ resource "aws_default_security_group" "kanda" {
     cidr_blocks = ["0.0.0.0/0"]
     from_port = 0
     to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = local.common_tags
+}
+
+resource "aws_security_group" "kanda-rds" {
+  name        = "kanda-rds"
+  vpc_id      = aws_vpc.kanda.id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
