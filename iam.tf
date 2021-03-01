@@ -83,3 +83,9 @@ resource "aws_iam_instance_profile" "ecs-instance-profile" {
       command = "sleep 10"
     }
 }
+
+resource "aws_iam_server_certificate" "kanda" {
+  name             = "kanda"
+  certificate_body = file("certs/cert.pem")
+  private_key      = file("certs/key.pem")
+}

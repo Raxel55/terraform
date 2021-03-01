@@ -1,2 +1,4 @@
-.terraform
+.terraform*
 values.tf
+certs*
+ssh-rsa*

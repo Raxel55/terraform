@@ -45,17 +45,26 @@ resource "aws_lb_listener" "kanda-1" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kanda-1.arn
   }
-  # certificate_arn = aws_acm_certificate.kanda.arn
+  
+#  default_action {
+#    type = "redirect"
+#
+#    redirect {
+#      port        = "443"
+#      protocol    = "HTTPS"
+#      status_code = "HTTP_301"
+#    }
+#  }
 }
 
-#resource "aws_lb_listener" "kanda-2" {
-#  load_balancer_arn = aws_lb.kanda.arn
-#  port              = "443"
-#  protocol          = "HTTPS"
-#
-#  default_action {
-#    type             = "forward"
-#    target_group_arn = aws_lb_target_group.kanda-2.arn
-#  }
-#  # certificate_arn = aws_acm_certificate.kanda.arn
-#}
+resource "aws_lb_listener" "kanda-2" {
+  load_balancer_arn = aws_lb.kanda.arn
+  port              = "443"
+  protocol          = "HTTPS"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.kanda-1.arn
+  }
+  certificate_arn = aws_iam_server_certificate.kanda.arn
+}
