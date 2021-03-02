@@ -6,9 +6,9 @@ resource "aws_db_instance" "kanda" {
   engine_version       = "5.7"
   instance_class       = "db.t3.medium"
   identifier           = "kanda"
-  name                 = local.db_name
-  username             = local.db_user
-  password             = local.db_password
+  name                 = var.db_name
+  username             = var.db_user
+  password             = var.db_password
   parameter_group_name = "kanda-mysql"
   publicly_accessible  = true
   vpc_security_group_ids = [aws_security_group.kanda-rds.id]

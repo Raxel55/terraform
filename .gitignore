@@ -1,4 +1,4 @@
 .terraform*
-values.tf
+*.tfvars
 certs*
 ssh-rsa*

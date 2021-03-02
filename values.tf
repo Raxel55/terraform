@@ -3,9 +3,18 @@ locals {
     managed_by = "terraform"
     app = "kandasoft-website"
   }
-  db_name = "kanda"
-  db_user = "kanda"
-  db_password = "Pa55w0rd"
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_user" {
+  type = string
+}
+
+variable "db_password" {
+  type = string
 }
 
 output "aws_ecr_repository_url" {
