@@ -1,22 +1,25 @@
 resource "aws_vpc" "kanda" {
-  cidr_block       = "10.2.0.0/26"
+  cidr_block       = var.vpc_cidr_block.vpc_cidr
   instance_tenancy = "default"
   enable_dns_support = true
   enable_dns_hostnames = true
-
   tags = local.common_tags
 }
 
-resource "aws_default_security_group" "kanda" {
+resource "aws_security_group" "kanda-ec2" {
   vpc_id = aws_vpc.kanda.id
-
   ingress {
-    protocol  = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port = 0
-    to_port   = 0
+    protocol  = "tcp"
+    cidr_blocks = [aws_vpc.kanda.cidr_block]
+    from_port = 80
+    to_port   = 80
   }
-
+  ingress {
+    protocol  = "tcp"
+    cidr_blocks = [aws_vpc.kanda.cidr_block]
+    from_port = 22
+    to_port   = 22
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -29,12 +32,11 @@ resource "aws_default_security_group" "kanda" {
 resource "aws_security_group" "kanda-rds" {
   name        = "kanda-rds"
   vpc_id      = aws_vpc.kanda.id
-
   ingress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [aws_vpc.kanda.cidr_block]
   }
 
   egress {
@@ -48,25 +50,22 @@ resource "aws_security_group" "kanda-rds" {
 
 resource "aws_subnet" "kanda-1" {
   vpc_id     = aws_vpc.kanda.id
-  cidr_block = "10.2.0.0/27"
-  availability_zone = "us-east-1a"
+  cidr_block = var.vpc_cidr_block.subnet_1_cidr
+  availability_zone = "${var.aws_region}a"
   map_public_ip_on_launch = true
-
   tags = local.common_tags
 }
 
 resource "aws_subnet" "kanda-2" {
   vpc_id     = aws_vpc.kanda.id
-  cidr_block = "10.2.0.32/27"
-  availability_zone = "us-east-1b"
+  cidr_block = var.vpc_cidr_block.subnet_2_cidr
+  availability_zone = "${var.aws_region}b"
   map_public_ip_on_launch = true
-
   tags = local.common_tags
 }
 
 resource "aws_internet_gateway" "kanda" {
   vpc_id = aws_vpc.kanda.id
-
   tags = local.common_tags
 }
 
@@ -79,7 +78,6 @@ resource "aws_route" "public_internet_gateway" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.kanda.id
-
   timeouts {
     create = "5m"
   }

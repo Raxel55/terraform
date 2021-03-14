@@ -6,9 +6,9 @@ resource "aws_db_instance" "kanda" {
   engine_version       = "5.7"
   instance_class       = "db.t3.medium"
   identifier           = "kanda"
-  name                 = var.db_name
-  username             = var.db_user
-  password             = var.db_password
+  name                 = var.database.name
+  username             = var.database.user
+  password             = var.database.password
   parameter_group_name = "kanda-mysql"
   publicly_accessible  = true
   vpc_security_group_ids = [aws_security_group.kanda-rds.id]
@@ -16,7 +16,7 @@ resource "aws_db_instance" "kanda" {
 }
 
 resource "aws_db_parameter_group" "kanda" {
-  name   = "kanda-mysql"
+  name   = "${local.name_prefix}-db-parameter-group"
   family = "mysql5.7"
 
   parameter {
@@ -32,8 +32,7 @@ resource "aws_db_parameter_group" "kanda" {
 }
 
 resource "aws_db_subnet_group" "kanda" {
-  name       = "kanda"
+  name       = "${local.name_prefix}-db-subnet-group"
   subnet_ids = [aws_subnet.kanda-1.id, aws_subnet.kanda-2.id]
-
   tags = local.common_tags
 }

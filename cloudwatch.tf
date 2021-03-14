@@ -1,10 +1,4 @@
 resource "aws_cloudwatch_log_group" "kanda" {
-  name = "kanda"
-
+  name = "${local.name_prefix}-log-group"
   tags = local.common_tags
 }
-
-#resource "aws_cloudwatch_log_stream" "kanda" {
-#  name           = "kanda"
-#  log_group_name = aws_cloudwatch_log_group.kanda.name
-#}
