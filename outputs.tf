@@ -1,11 +1,12 @@
 output "aws_ecr_repository_url" {
-  value = aws_ecr_repository.kanda.repository_url
-}
-
-output "ecs_execution_role_arn" {
-  value = aws_iam_role.ecs_execution_role.arn
+  value = data.aws_ecr_repository.kanda.repository_url
 }
 
 output "aws_db_instance_address" {
   value = aws_db_instance.kanda.address
+}
+
+output "aws_ec2_ssh_private_key" {
+  value = tls_private_key.kanda-ssh[0].private_key_pem
+  sensitive = true
 }

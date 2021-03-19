@@ -5,7 +5,7 @@ resource "aws_db_instance" "kanda" {
   engine               = "mysql"
   engine_version       = "5.7"
   instance_class       = "db.t3.medium"
-  identifier           = "kanda"
+  identifier           = "${local.name_prefix}-db"
   name                 = var.database.name
   username             = var.database.user
   password             = var.database.password

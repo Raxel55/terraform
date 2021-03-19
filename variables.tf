@@ -28,7 +28,7 @@ variable "vpc_cidr_block" {
     subnet_1_cidr = string
     subnet_2_cidr = string
   })
-  description = "The RDS mysql database configuration"
+  description = "VPC CIDR blocks"
   default = {
     vpc_cidr = "10.2.0.0/26"
     subnet_1_cidr = "10.2.0.0/27"

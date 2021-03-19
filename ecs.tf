@@ -13,7 +13,7 @@ resource "aws_launch_configuration" "kanda" {
     name_prefix                 = local.name_prefix
     image_id                    = "ami-0ecd34837cf9fa094"
     instance_type               = "t2.medium"
-    iam_instance_profile        = aws_iam_instance_profile.ecs-instance-profile.id
+    iam_instance_profile        = data.aws_iam_instance_profile.ecs-instance-profile.arn
     root_block_device {
       volume_type = "standard"
       volume_size = 100
@@ -65,6 +65,10 @@ resource "aws_autoscaling_group" "kanda" {
   }
 }
 
+data "aws_ecr_repository" "kanda" {
+  name = "kanda"
+}
+
 resource "aws_ecs_capacity_provider" "kanda" {
   name = "${local.name_prefix}-capacity-provider"
   auto_scaling_group_provider {
@@ -82,9 +86,37 @@ resource "aws_ecs_capacity_provider" "kanda" {
 
 resource "aws_ecs_task_definition" "kanda" {
   family                = local.name_prefix
-  container_definitions = file("container-definition.json")
-  task_role_arn = aws_iam_role.ecs_execution_role.arn
-  execution_role_arn = aws_iam_role.ecs_execution_role.arn
+  container_definitions = <<TASK_DEFINITION
+[
+  {
+    "name": "${local.name_prefix}",
+    "image": "${data.aws_ecr_repository.kanda.repository_url}:develop",
+    "memoryReservation": 1024,
+    "essential": true,
+    "environment": [
+            {"name": "WORDPRESS_DB_NAME", "value": "${var.database.name}"},
+            {"name": "WORDPRESS_DB_USER", "value": "${var.database.user}"},
+            {"name": "WORDPRESS_DB_PASSWORD", "value": "${var.database.password}"},
+            {"name": "WORDPRESS_DB_HOST", "value": "${aws_db_instance.kanda.address}"}
+        ],
+    "portMappings": [
+      {
+        "containerPort": 80
+      }
+    ],
+    "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "${local.name_prefix}-log-group",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "${local.name_prefix}"
+                }
+            }
+  }
+]
+TASK_DEFINITION
+  task_role_arn = data.aws_iam_role.ecs_execution_role.arn
+  execution_role_arn = data.aws_iam_role.ecs_execution_role.arn
   network_mode = "awsvpc"
   requires_compatibilities = ["EC2"]
   tags = local.common_tags
