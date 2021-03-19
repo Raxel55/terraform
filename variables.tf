@@ -48,22 +48,10 @@ variable "environment" {
   default = "dev"
 }
 
-variable "s3_terraform_bucket" {
-  type = string
-  description = "S3 bucket name for terraform state files"
-  default = "kandasite-tf-state"
-}
-
 variable "aws_region" {
   type = string
   description = "AWS region"
   default = "us-east-1"
-}
-
-variable "terraform-role-arn" {
-  type = string
-  description = "AWS IAM role for terraform service account"
-  sensitive = true
 }
 
 variable "https-certs" {

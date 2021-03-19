@@ -2,8 +2,7 @@
   {
     "name": "kanda",
     "image": "814517281194.dkr.ecr.us-east-1.amazonaws.com/kanda",
-    "cpu": 128,
-    "memory": 1024,
+    "memoryReservation": 1024,
     "essential": true,
     "environment": [
             {"name": "WORDPRESS_DB_NAME", "value": "${local.db_name}"},

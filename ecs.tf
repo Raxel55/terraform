@@ -87,8 +87,6 @@ resource "aws_ecs_task_definition" "kanda" {
   execution_role_arn = aws_iam_role.ecs_execution_role.arn
   network_mode = "awsvpc"
   requires_compatibilities = ["EC2"]
-  cpu = 128
-  memory = 1024
   tags = local.common_tags
 }
 

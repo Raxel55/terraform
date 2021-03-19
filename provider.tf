@@ -5,23 +5,22 @@ terraform {
       version = "~> 3.0"
     }
   }
-#  experiments = [provider_sensitive_attrs]
 }
 
 provider "aws" {
-  region = "us-east-1" #var.aws_region
+  region = "us-east-1"
   shared_credentials_file = "~/.aws/credentials"
   assume_role {
-    role_arn = "arn:aws:iam::814517281194:role/terraform-sa" #var.terraform-role-arn
+    role_arn = "arn:aws:iam::814517281194:role/terraform-sa"
   }
 }
 
 terraform {
   backend "s3" {
-    bucket = "kandasite-tf-state" #var.s3_terraform_bucket
+    bucket = "kandasite-tf-state"
     key = "kandasoft-dev.tfstate" #"${local.name_prefix}.tfstate"
     region = "us-east-1" #var.aws_region
     shared_credentials_file = "~/.aws/credentials"
-    role_arn = "arn:aws:iam::814517281194:role/terraform-sa" #var.terraform-role-arn
+    role_arn = "arn:aws:iam::814517281194:role/terraform-sa"
   }
 }
