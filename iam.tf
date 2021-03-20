@@ -18,15 +18,15 @@ resource "aws_iam_server_certificate" "kanda" {
 
 resource "tls_private_key" "kanda-cert" {
   count = var.https-certs.generate ? 1 : 0
-  algorithm = "ECDSA"
+  algorithm = "RSA"
 }
 
 resource "tls_self_signed_cert" "kanda" {
   count = var.https-certs.generate ? 1 : 0
   key_algorithm   = tls_private_key.kanda-cert[0].algorithm
   private_key_pem = tls_private_key.kanda-cert[0].private_key_pem
-  validity_period_hours = 12
-  early_renewal_hours = 3
+  validity_period_hours = 720
+  early_renewal_hours = 24
   allowed_uses = [
       "key_encipherment",
       "digital_signature",
@@ -34,7 +34,7 @@ resource "tls_self_signed_cert" "kanda" {
   ]
   dns_names = [aws_lb.kanda.dns_name]
   subject {
-      common_name  = "aws_lb.kanda.dns_name"
+      common_name  = aws_lb.kanda.dns_name
       organization = local.name_prefix
   }
 }

@@ -10,3 +10,7 @@ output "aws_ec2_ssh_private_key" {
   value = tls_private_key.kanda-ssh[0].private_key_pem
   sensitive = true
 }
+
+output "load_balancer_dns_name" {
+  value = aws_lb.kanda.dns_name
+}

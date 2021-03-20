@@ -7,6 +7,7 @@ resource "aws_vpc" "kanda" {
 }
 
 resource "aws_security_group" "kanda-ec2" {
+  name = "${local.name_prefix}-ec2-sg"
   vpc_id = aws_vpc.kanda.id
   ingress {
     protocol  = "tcp"
@@ -16,7 +17,7 @@ resource "aws_security_group" "kanda-ec2" {
   }
   ingress {
     protocol  = "tcp"
-    cidr_blocks = [aws_vpc.kanda.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
     from_port = 22
     to_port   = 22
   }
@@ -30,7 +31,7 @@ resource "aws_security_group" "kanda-ec2" {
 }
 
 resource "aws_security_group" "kanda-rds" {
-  name        = "kanda-rds"
+  name        = "${local.name_prefix}-rds-sg"
   vpc_id      = aws_vpc.kanda.id
   ingress {
     from_port   = 3306
@@ -38,7 +39,30 @@ resource "aws_security_group" "kanda-rds" {
     protocol    = "tcp"
     cidr_blocks = [aws_vpc.kanda.cidr_block]
   }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = local.common_tags
+}
 
+resource "aws_security_group" "kanda-alb" {
+  name        = "${local.name_prefix}-alb-sg"
+  vpc_id      = aws_vpc.kanda.id
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   egress {
     from_port   = 0
     to_port     = 0

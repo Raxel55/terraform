@@ -11,7 +11,7 @@ resource "aws_ecs_cluster" "kanda" {
 
 resource "aws_launch_configuration" "kanda" {
     name_prefix                 = local.name_prefix
-    image_id                    = "ami-0ecd34837cf9fa094"
+    image_id                    = "ami-09a3cad575b7eabaa"
     instance_type               = "t2.medium"
     iam_instance_profile        = data.aws_iam_instance_profile.ecs-instance-profile.arn
     root_block_device {
@@ -47,9 +47,9 @@ resource "aws_autoscaling_group" "kanda" {
   name               = "${local.name_prefix}-asg"
   vpc_zone_identifier = [aws_subnet.kanda-1.id, aws_subnet.kanda-2.id]
   desired_capacity   = 1
-  max_size           = 2
+  max_size           = 1
   min_size           = 0
-  launch_configuration        = aws_launch_configuration.kanda.name
+  launch_configuration = aws_launch_configuration.kanda.name
   tag {
     key                 = "AmazonECSManaged"
     value               = ""

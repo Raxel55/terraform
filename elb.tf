@@ -17,6 +17,7 @@ resource "aws_lb" "kanda" {
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.kanda-1.id, aws_subnet.kanda-2.id]
+  security_groups    = [aws_security_group.kanda-alb.id]
   enable_deletion_protection = true
   tags = local.common_tags
 }

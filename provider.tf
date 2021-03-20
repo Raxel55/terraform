@@ -18,7 +18,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "kandasite-tf-state"
-    key = "kandasoft-dev.tfstate" #"${local.name_prefix}.tfstate"
+    key = "kandasoft-qa.tfstate" #"${local.name_prefix}.tfstate"
     region = "us-east-1" #var.aws_region
     shared_credentials_file = "~/.aws/credentials"
     role_arn = "arn:aws:iam::814517281194:role/terraform-sa"
