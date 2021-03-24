@@ -93,12 +93,24 @@ resource "aws_ecs_task_definition" "kanda" {
     "image": "${data.aws_ecr_repository.kanda.repository_url}:develop",
     "memoryReservation": 1024,
     "essential": true,
-    "environment": [
-            {"name": "WORDPRESS_DB_NAME", "value": "${var.database.name}"},
-            {"name": "WORDPRESS_DB_USER", "value": "${var.database.user}"},
-            {"name": "WORDPRESS_DB_PASSWORD", "value": "${var.database.password}"},
-            {"name": "WORDPRESS_DB_HOST", "value": "${aws_db_instance.kanda.address}"}
-        ],
+    "secrets": [
+        {
+          "name": "WORDPRESS_DB_NAME",
+          "valueFrom": "${aws_ssm_parameter.db-name.arn}"
+        },
+        {
+          "name": "WORDPRESS_DB_USER",
+          "valueFrom": "${aws_ssm_parameter.db-user.arn}"
+        },
+        {
+          "name": "WORDPRESS_DB_PASSWORD",
+          "valueFrom": "${aws_ssm_parameter.db-password.arn}"
+        },
+        {
+          "name": "WORDPRESS_DB_HOST",
+          "valueFrom": "${aws_ssm_parameter.db-host.arn}"
+        }
+      ],
     "portMappings": [
       {
         "containerPort": 80
