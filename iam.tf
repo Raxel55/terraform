@@ -89,3 +89,11 @@ resource "aws_iam_server_certificate" "kanda" {
   certificate_body = file("certs/cert.pem")
   private_key      = file("certs/key.pem")
 }
+
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_role_ssm" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+}
+
+
