@@ -16,7 +16,6 @@ resource "aws_iam_role" "ecs_execution_role" {
   ]
 }
 EOF
-  tags = local.common_tags
 }
 
 
@@ -84,16 +83,7 @@ resource "aws_iam_instance_profile" "ecs-instance-profile" {
     }
 }
 
-resource "aws_iam_server_certificate" "kanda" {
-  name             = "kanda"
-  certificate_body = file("certs/cert.pem")
-  private_key      = file("certs/key.pem")
-}
-
-
 resource "aws_iam_role_policy_attachment" "ecs_execution_role_ssm" {
   role       = aws_iam_role.ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 }
-
-
