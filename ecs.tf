@@ -120,7 +120,7 @@ resource "aws_ecs_task_definition" "kanda" {
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-group": "${local.name_prefix}-log-group",
-                    "awslogs-region": "us-east-1",
+                    "awslogs-region": "${var.aws_region}",
                     "awslogs-stream-prefix": "${local.name_prefix}"
                 }
             }

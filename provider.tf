@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-1" #var.aws_region
   shared_credentials_file = "~/.aws/credentials"
   assume_role {
     role_arn = "arn:aws:iam::814517281194:role/terraform-sa"
