@@ -37,7 +37,7 @@ resource "aws_security_group" "kanda-rds" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.kanda.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
     from_port   = 0
