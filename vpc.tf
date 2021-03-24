@@ -1,17 +1,13 @@
-resource "aws_vpc" "kanda" {
-  cidr_block       = var.vpc_cidr_block.vpc_cidr
-  instance_tenancy = "default"
-  enable_dns_support = true
-  enable_dns_hostnames = true
-  tags = local.common_tags
+data "aws_vpc" "kanda" {
+  id = "vpc-026cc78e3a34ee662"
 }
 
 resource "aws_security_group" "kanda-ec2" {
   name = "${local.name_prefix}-ec2-sg"
-  vpc_id = aws_vpc.kanda.id
+  vpc_id = data.aws_vpc.kanda.id
   ingress {
     protocol  = "tcp"
-    cidr_blocks = [aws_vpc.kanda.cidr_block]
+    cidr_blocks = [data.aws_vpc.kanda.cidr_block]
     from_port = 80
     to_port   = 80
   }
@@ -32,7 +28,7 @@ resource "aws_security_group" "kanda-ec2" {
 
 resource "aws_security_group" "kanda-rds" {
   name        = "${local.name_prefix}-rds-sg"
-  vpc_id      = aws_vpc.kanda.id
+  vpc_id      = data.aws_vpc.kanda.id
   ingress {
     from_port   = 3306
     to_port     = 3306
@@ -50,7 +46,7 @@ resource "aws_security_group" "kanda-rds" {
 
 resource "aws_security_group" "kanda-alb" {
   name        = "${local.name_prefix}-alb-sg"
-  vpc_id      = aws_vpc.kanda.id
+  vpc_id      = data.aws_vpc.kanda.id
   ingress {
     from_port   = 80
     to_port     = 80
@@ -72,47 +68,10 @@ resource "aws_security_group" "kanda-alb" {
   tags = local.common_tags
 }
 
-resource "aws_subnet" "kanda-1" {
-  vpc_id     = aws_vpc.kanda.id
-  cidr_block = var.vpc_cidr_block.subnet_1_cidr
-  availability_zone = "${var.aws_region}a"
-  map_public_ip_on_launch = true
-  tags = local.common_tags
+data "aws_subnet" "kanda-1" {
+  id = "subnet-01903e61d2139ab94"
 }
 
-resource "aws_subnet" "kanda-2" {
-  vpc_id     = aws_vpc.kanda.id
-  cidr_block = var.vpc_cidr_block.subnet_2_cidr
-  availability_zone = "${var.aws_region}b"
-  map_public_ip_on_launch = true
-  tags = local.common_tags
-}
-
-resource "aws_internet_gateway" "kanda" {
-  vpc_id = aws_vpc.kanda.id
-  tags = local.common_tags
-}
-
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.kanda.id
-  tags = local.common_tags
-}
-
-resource "aws_route" "public_internet_gateway" {
-  route_table_id         = aws_route_table.public.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.kanda.id
-  timeouts {
-    create = "5m"
-  }
-}
-
-resource "aws_route_table_association" "kanda-1" {
-  subnet_id      = aws_subnet.kanda-1.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "kanda-2" {
-  subnet_id      = aws_subnet.kanda-2.id
-  route_table_id = aws_route_table.public.id
+data "aws_subnet" "kanda-2" {
+  id = "subnet-0b5f1b84133fef3be"
 }

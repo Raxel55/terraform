@@ -45,7 +45,7 @@ resource "tls_private_key" "kanda-ssh" {
 
 resource "aws_autoscaling_group" "kanda" {
   name               = "${local.name_prefix}-asg"
-  vpc_zone_identifier = [aws_subnet.kanda-1.id, aws_subnet.kanda-2.id]
+  vpc_zone_identifier = [data.aws_subnet.kanda-1.id, data.aws_subnet.kanda-2.id]
   desired_capacity   = 1
   max_size           = 1
   min_size           = 0
@@ -140,7 +140,7 @@ resource "aws_ecs_service" "kanda" {
   task_definition = aws_ecs_task_definition.kanda.arn
   desired_count   = 1
   network_configuration {
-    subnets = [aws_subnet.kanda-1.id, aws_subnet.kanda-2.id]
+    subnets = [data.aws_subnet.kanda-1.id, data.aws_subnet.kanda-2.id]
     security_groups = [aws_security_group.kanda-ec2.id]
     assign_public_ip = false
   }

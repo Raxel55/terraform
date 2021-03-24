@@ -30,6 +30,6 @@ resource "aws_ssm_parameter" "db-host" {
   description = "The database name"
   type        = "String"
   overwrite   = true
-  value       = aws_db_instance.kanda.address
+  value       = data.aws_db_instance.kanda.address
   tags = local.common_tags
 }

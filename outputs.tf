@@ -3,7 +3,7 @@ output "aws_ecr_repository_url" {
 }
 
 output "aws_db_instance_address" {
-  value = aws_db_instance.kanda.address
+  value = data.aws_db_instance.kanda.address
 }
 
 output "aws_ec2_ssh_private_key" {
@@ -12,5 +12,5 @@ output "aws_ec2_ssh_private_key" {
 }
 
 output "load_balancer_dns_name" {
-  value = aws_lb.kanda.dns_name
+  value = data.aws_lb.kanda.dns_name
 }
