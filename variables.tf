@@ -79,3 +79,9 @@ variable "ssh-key-pair" {
     public_key = "ssh-rsa.public.key"
   }
 }
+
+variable "wp-site-url" {
+  type = string
+  description = "Wordpress site url and WP_HOME"
+  default = "localhost"
+}

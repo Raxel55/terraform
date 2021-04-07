@@ -109,6 +109,10 @@ resource "aws_ecs_task_definition" "kanda" {
         {
           "name": "WORDPRESS_DB_HOST",
           "valueFrom": "${aws_ssm_parameter.db-host.arn}"
+        },
+        {
+          "name": "WORDPRESS_CONFIG_EXTRA",
+          "valueFrom": "${aws_ssm_parameter.wp-config-extra.arn}"
         }
       ],
     "portMappings": [
